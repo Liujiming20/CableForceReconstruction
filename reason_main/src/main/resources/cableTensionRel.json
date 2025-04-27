@@ -1,0 +1,34 @@
+{
+  "inst:cableTensionSensor17": [
+        "inst:cableTensionSensor16",
+        "inst:cableTensionSensor18"
+    ],
+  "inst:cableTensionSensor16": [
+        "inst:cableTensionSensor14",
+        "inst:cableTensionSensor17"
+    ],
+  "inst:cableTensionSensor18": [
+        "inst:cableTensionSensor16",
+        "inst:cableTensionSensor17"
+    ],
+  "inst:cableTensionSensor14": [
+        "inst:cableTensionSensor13",
+        "inst:cableTensionSensor16"
+    ],
+  "inst:cableTensionSensor13": [
+        "inst:cableTensionSensor12",
+        "inst:cableTensionSensor14"
+    ],
+  "inst:cableTensionSensor12": [
+        "inst:cableTensionSensor11",
+        "inst:cableTensionSensor13"
+    ],
+  "inst:cableTensionSensor11": [
+        "inst:cableTensionSensor9",
+        "inst:cableTensionSensor12"
+    ],
+  "inst:cableTensionSensor9": [
+        "inst:cableTensionSensor11",
+        "inst:cableTensionSensor12"
+    ],
+}

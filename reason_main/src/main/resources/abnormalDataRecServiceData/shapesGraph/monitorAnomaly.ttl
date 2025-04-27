@@ -1,0 +1,135 @@
+@prefix dash: <http://datashapes.org/dash#> .
+@prefix mys: <http://datashapes.org/myShapeGraph/myShape#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix express: <https://w3id.org/express#> .
+@prefix list: <https://w3id.org/list#> .
+@prefix ifc: <http://standards.buildingsmart.org/IFC/DEV/IFC4/ADD2_TC1/OWL#> .
+@prefix bot: <https://w3id.org/bot#> .
+@prefix csm: <http://www.semanticweb.org/16648/ontologies/2023/2/CableStructureMonitor#> .
+@prefix ssn: <http://www.w3.org/ns/ssn/> .
+@prefix inst: <http://www.semanticweb.org/16648/ontologies/2023/2/instance/> .
+@prefix qudt: <http://qudt.org/schema/qudt/> .
+@prefix rdfp: <https://w3id.org/rdfp/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix unit: <http://qudt.org/vocab/unit/> .
+@prefix props: <http://lbd.arch.rwth-aachen.de/props#> .
+
+<http://datashapes.org/myShapeGraph/myShape>
+  rdf:type owl:Ontology ;
+  rdfs:label "Abnormity diagnosis of cable net structure's monitor data." ;
+  owl:imports <http://datashapes.org/dash> ;
+  sh:declare [
+      rdf:type sh:PrefixDeclaration ;
+      sh:namespace "http://datashapes.org/myShapeGraph/myShape#"^^xsd:anyURI ;
+      sh:prefix "mys" ;
+    ] ;
+    sh:declare [
+      rdf:type sh:PrefixDeclaration ;
+      sh:namespace "http://standards.buildingsmart.org/IFC/DEV/IFC4/ADD2_TC1/OWL#"^^xsd:anyURI ;
+      sh:prefix "ifc" ;
+    ] ;
+    sh:declare [
+      rdf:type sh:PrefixDeclaration ;
+      sh:namespace "http://www.semanticweb.org/16648/ontologies/2023/2/instance/"^^xsd:anyURI ;
+      sh:prefix "inst" ;
+    ] ;
+    sh:declare [
+      rdf:type sh:PrefixDeclaration ;
+      sh:namespace "https://w3id.org/express#"^^xsd:anyURI ;
+      sh:prefix "express" ;
+    ] ;
+    sh:declare [
+      rdf:type sh:PrefixDeclaration ;
+      sh:namespace "https://w3id.org/list#"^^xsd:anyURI ;
+      sh:prefix "list" ;
+    ] ;
+    sh:declare [
+      rdf:type sh:PrefixDeclaration ;
+      sh:namespace "https://w3id.org/bot#"^^xsd:anyURI ;
+      sh:prefix "bot" ;
+    ] ;
+    sh:declare [
+      rdf:type sh:PrefixDeclaration ;
+      sh:namespace "http://www.semanticweb.org/16648/ontologies/2023/2/CableStructureMonitor#"^^xsd:anyURI ;
+      sh:prefix "csm" ;
+    ] ;
+    sh:declare [
+      rdf:type sh:PrefixDeclaration ;
+      sh:namespace "http://www.w3.org/ns/ssn/"^^xsd:anyURI ;
+      sh:prefix "ssn" ;
+    ] ;
+    sh:declare [
+      rdf:type sh:PrefixDeclaration ;
+      sh:namespace "http://qudt.org/schema/qudt/"^^xsd:anyURI ;
+      sh:prefix "qudt" ;
+    ] ;
+    sh:declare [
+      rdf:type sh:PrefixDeclaration ;
+      sh:namespace "https://w3id.org/rdfp/"^^xsd:anyURI ;
+      sh:prefix "rdfp" ;
+    ] ;
+    sh:declare [
+      rdf:type sh:PrefixDeclaration ;
+      sh:namespace "http://www.w3.org/ns/sosa/"^^xsd:anyURI ;
+      sh:prefix "sosa" ;
+    ] ;
+    sh:declare [
+      rdf:type sh:PrefixDeclaration ;
+      sh:namespace "http://www.w3.org/2006/time#"^^xsd:anyURI ;
+      sh:prefix "time" ;
+    ] ;
+    sh:declare [
+      rdf:type sh:PrefixDeclaration ;
+      sh:namespace "http://qudt.org/vocab/unit/"^^xsd:anyURI ;
+      sh:prefix "unit" ;
+    ] ;
+    sh:declare [
+      rdf:type sh:PrefixDeclaration ;
+      sh:namespace "http://lbd.arch.rwth-aachen.de/props#"^^xsd:anyURI ;
+      sh:prefix "props" ;
+    ] ;
+.
+mys:MonitorDataConstraintComponent
+  rdf:type sh:ConstraintComponent ;
+  sh:nodeValidator [
+    rdf:type sh:SPARQLSelectValidator ;
+    sh:prefixes <http://datashapes.org/myShapeGraph/myShape>;
+    sh:select """
+    SELECT DISTINCT $this ?value
+    WHERE {
+     $this sosa:madeObservation ?ObservationType.
+	
+     ?ObservationType sosa:hasResult/qudt:numericValue ?value.	  
+
+     FILTER(?value < ?LowerThreshold || ?value > ?UpperThreshold)
+     }""";
+  ] ;
+  sh:parameter [
+    sh:path mys:LowerThreshold ;
+    sh:datatype xsd:double ;
+    sh:name "Lower threshold for monitoring data" ;
+    sh:optional "true"^^xsd:boolean ;
+  ] ;
+  sh:parameter [
+    sh:path mys:UpperThreshold ;
+    sh:datatype xsd:double ;
+    sh:name "Effective calculated size of fillet weld" ;
+    sh:optional "true"^^xsd:boolean ;
+  ] ;
+  sh:parameter [
+    sh:path mys:ObservationType ;
+    sh:class sosa:Observation ;
+    sh:name "Observation type of the sensor" ;
+  ] .
+mys:thresholdsVerifiedShape
+  rdf:type sh:NodeShape ;
+  sh:targetClass sosa:Sensor;
+  mys:LowerThreshold 1000.0;
+  mys:UpperThreshold 1200.0;
+  mys:ObservationType inst:cableTensionObs16;
+.
